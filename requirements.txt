@@ -1,0 +1,18 @@
+# Environment management
+python-dotenv
+
+# Blockchain interaction & HTTP requests
+web3
+requests
+
+# API framework & ASGI server
+fastapi
+uvicorn
+
+# Reinforcement learning & simulation
+stable-baselines3
+gym
+numpy
+
+# Testing framework
+pytest
