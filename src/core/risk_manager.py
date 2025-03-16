@@ -10,13 +10,12 @@ load_dotenv()
 
 ETH_RPC = os.getenv("ETH_RPC")
 BSC_RPC = os.getenv("BSC_RPC")
-INJECTIVE_RPC = os.getenv("INJECTIVE_RPC")
+INJECTIVE_RPC = os.getenv("INJECTIVE_RPC")  # Injective is not EVM, special handling needed
 
-# Set up Web3 providers for supported chains.
+# Set up Web3 providers for EVM-compatible chains.
 web3_providers = {
-    "Ethereum": Web3(Web3.HTTPProvider(ETH_RPC)),
-    "BSC": Web3(Web3.HTTPProvider(BSC_RPC)),
-    "Injective": Web3(Web3.HTTPProvider(INJECTIVE_RPC))  # May need different handling
+    "Ethereum": Web3(Web3.HTTPProvider(ETH_RPC)) if ETH_RPC else None,
+    "BSC": Web3(Web3.HTTPProvider(BSC_RPC)) if BSC_RPC else None,
 }
 
 def check_slippage(expected_output, actual_output, max_slippage_percent=1.0):
@@ -42,25 +41,31 @@ def estimate_gas_price(chain="Ethereum"):
     """
     web3 = web3_providers.get(chain)
     if not web3:
+        print(f"⚠️ Warning: No Web3 provider available for {chain}.")
         return None
     try:
         return web3.eth.gas_price
     except Exception as e:
-        print(f"Error estimating gas price: {e}")
+        print(f"❌ Error estimating gas price on {chain}: {e}")
         return None
 
-def protect_against_mev(tx_data, chain="Ethereum"):
+def protect_against_mev(tx_data, chain="Ethereum", min_multiplier=1.2, gas_price_floor=10**9):
     """
     Apply MEV protection strategies, such as increasing the gas price to discourage front-running.
     
     :param tx_data: The transaction data dictionary.
     :param chain: Blockchain network.
+    :param min_multiplier: Minimum multiplier for gas price (default: 20% increase).
+    :param gas_price_floor: Minimum gas price to use if estimation fails.
     :return: Modified transaction data.
     """
-    gas_price = estimate_gas_price(chain)
-    if gas_price:
-        # Increase gas price by 20% to help secure the transaction.
-        tx_data["gasPrice"] = int(gas_price * 1.2)
+    estimated_gas_price = estimate_gas_price(chain)
+
+    # Use the estimated gas price or fall back to a predefined minimum
+    new_gas_price = estimated_gas_price if estimated_gas_price else gas_price_floor
+
+    # Increase by the set multiplier (default 1.2x)
+    tx_data["gasPrice"] = int(new_gas_price * min_multiplier)
     return tx_data
 
 # CLI testing for risk management functions.
@@ -69,9 +74,9 @@ if __name__ == "__main__":
     expected = 100
     actual = 98.5
     within_limit, slippage = check_slippage(expected, actual, max_slippage_percent=1.5)
-    print(f"Slippage Check: {'OK' if within_limit else 'Exceeds Limit'} (Slippage: {slippage:.2f}%)")
+    print(f"✅ Slippage Check: {'OK' if within_limit else 'Exceeds Limit'} (Slippage: {slippage:.2f}%)")
     
     # Test MEV protection.
     dummy_tx = {"gasPrice": 1000000000}
     modified_tx = protect_against_mev(dummy_tx, chain="Ethereum")
-    print("Modified Transaction:", modified_tx)
+    print("🚀 Modified Transaction:", modified_tx)
