@@ -125,7 +125,7 @@ DeFAI-Terminal/
 Execute a swap from the command line using the `main.py` script:
 
 ```bash
-python src/main.py --swap_input 10 --from_address 0xYourAddress --private_key YourPrivateKey --chain Ethereum
+PYTHONPATH=$(pwd)/src python src/main.py --swap_input 10 --from_address 0xYourAddress --private_key YourPrivateKey --chain Ethereum
 ```
 
 Replace the placeholder values with your actual data. The CLI will fetch liquidity data, run the MCTS router, and execute the optimal swap transaction.
