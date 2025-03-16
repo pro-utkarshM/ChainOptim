@@ -16,3 +16,5 @@ numpy
 
 # Testing framework
 pytest
+lark
+lark-parser

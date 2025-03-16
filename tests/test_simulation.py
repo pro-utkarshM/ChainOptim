@@ -2,7 +2,7 @@
 # tests/test_simulation.py
 
 import pytest
-from core.data.simulation import simulate_trade_execution, calculate_slippage
+from data.simulation import simulate_trade_execution, calculate_slippage
 
 def test_simulate_trade_execution():
     input_amount = 10
