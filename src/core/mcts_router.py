@@ -7,7 +7,7 @@ import json
 
 # Import the liquidity aggregation module.
 # Ensure that the liquidity.py file is in the same directory structure (src/core/)
-from liquidity import fetch_all_liquidity
+from core.liquidity import fetch_all_liquidity
 
 # -----------------------------
 # MCTS Node Definition

@@ -6,7 +6,7 @@ import json
 import os
 from web3 import Web3
 from dotenv import load_dotenv
-from risk_manager import protect_against_mev
+from core.risk_manager import protect_against_mev
 
 # Load environment variables from the .env file
 load_dotenv()
