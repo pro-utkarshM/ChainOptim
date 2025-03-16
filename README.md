@@ -130,7 +130,7 @@ PYTHONPATH=$(pwd)/src python src/main.py --swap_input 10 --from_address 0xYourAd
 
 Replace the placeholder values with your actual data. The CLI will fetch liquidity data, run the MCTS router, and execute the optimal swap transaction.
 
-### API
+### API (to be implemented)
 
 Run the FastAPI backend for programmatic access:
 
