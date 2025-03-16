@@ -145,7 +145,7 @@ Access the API documentation at [http://localhost:8000/docs](http://localhost:80
 Run the unit and integration tests using pytest:
 
 ```bash
-pytest
+PYTHONPATH=$(pwd)/src pytest
 ```
 
 Ensure that all tests pass before deploying or integrating changes.
